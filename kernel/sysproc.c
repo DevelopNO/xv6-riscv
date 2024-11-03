@@ -7,6 +7,20 @@
 #include "proc.h"
 
 uint64
+sys_shutdown(void)
+{
+	// QEMU's I/O port for CPI shutdown
+	volatile uint32 *shutdown_reg = (uint32 *)0x100000;
+
+	*shutdown_reg = 0x5555;
+
+	while (1) {
+		asm volatile("wfi");
+	}
+	return 0;
+}
+
+uint64
 sys_exit(void)
 {
   int n;
